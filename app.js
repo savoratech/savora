@@ -1,0 +1,388 @@
+// Savora stores all user data in this single localStorage key.
+const STORAGE_KEY = "savora-data";
+
+// These categories are used for the spending tracker totals.
+const CATEGORIES = ["Food", "Transport", "Shopping", "Entertainment", "Travel", "Other"];
+
+// Starter data makes the app useful on first open. Users can reset back to this sample data.
+const demoData = {
+  income: 2650,
+  bills: [
+    { id: createId(), name: "Rent", amount: 950, dueDate: "2026-06-01" },
+    { id: createId(), name: "Energy", amount: 128, dueDate: "2026-06-15" }
+  ],
+  transactions: [
+    { id: createId(), name: "Groceries", amount: 74.2, category: "Food" },
+    { id: createId(), name: "Train ticket", amount: 22.8, category: "Transport" }
+  ],
+  goals: [
+    { id: createId(), name: "Holiday fund", target: 1200, saved: 420 }
+  ],
+  renewals: [
+    { id: createId(), type: "Car insurance", date: "2026-06-22" },
+    { id: createId(), type: "Broadband", date: "2026-08-12" }
+  ]
+};
+
+// The app state is kept in memory while the page is open, then saved after every change.
+let state = loadState();
+
+const elements = {
+  incomeForm: document.querySelector("#incomeForm"),
+  incomeInput: document.querySelector("#incomeInput"),
+  incomeAmount: document.querySelector("#incomeAmount"),
+  billsAmount: document.querySelector("#billsAmount"),
+  spendingAmount: document.querySelector("#spendingAmount"),
+  remainingAmount: document.querySelector("#remainingAmount"),
+  renewalCount: document.querySelector("#renewalCount"),
+  billForm: document.querySelector("#billForm"),
+  billId: document.querySelector("#billId"),
+  billName: document.querySelector("#billName"),
+  billAmount: document.querySelector("#billAmount"),
+  billDueDate: document.querySelector("#billDueDate"),
+  billSubmitButton: document.querySelector("#billSubmitButton"),
+  billTotalLabel: document.querySelector("#billTotalLabel"),
+  billList: document.querySelector("#billList"),
+  transactionForm: document.querySelector("#transactionForm"),
+  transactionName: document.querySelector("#transactionName"),
+  transactionAmount: document.querySelector("#transactionAmount"),
+  transactionCategory: document.querySelector("#transactionCategory"),
+  transactionTotalLabel: document.querySelector("#transactionTotalLabel"),
+  transactionList: document.querySelector("#transactionList"),
+  categoryTotals: document.querySelector("#categoryTotals"),
+  goalForm: document.querySelector("#goalForm"),
+  goalName: document.querySelector("#goalName"),
+  goalTarget: document.querySelector("#goalTarget"),
+  goalSaved: document.querySelector("#goalSaved"),
+  goalList: document.querySelector("#goalList"),
+  renewalForm: document.querySelector("#renewalForm"),
+  renewalType: document.querySelector("#renewalType"),
+  customRenewalGroup: document.querySelector("#customRenewalGroup"),
+  customRenewalName: document.querySelector("#customRenewalName"),
+  renewalDate: document.querySelector("#renewalDate"),
+  renewalList: document.querySelector("#renewalList"),
+  resetDemoButton: document.querySelector("#resetDemoButton")
+};
+
+// Convert a number into a currency string for the user's browser locale.
+function formatMoney(value) {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP"
+  }).format(value || 0);
+}
+
+// Create an ID for new records. crypto is preferred, with a fallback for older browsers.
+function createId() {
+  if (globalThis.crypto && typeof globalThis.crypto.randomUUID === "function") {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+// Clone plain data objects so demo data is copied instead of shared by reference.
+function cloneData(data) {
+  return JSON.parse(JSON.stringify(data));
+}
+
+// Dates are displayed in a compact, readable format.
+function formatDate(dateString) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  }).format(new Date(`${dateString}T00:00:00`));
+}
+
+// Escape user-entered text before placing it in HTML strings.
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+// Load saved data. If none exists yet, save and return demo data.
+function loadState() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if (!saved) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(demoData));
+    return cloneData(demoData);
+  }
+
+  return JSON.parse(saved);
+}
+
+// Save the latest state so the app reloads with the same data next time.
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// Add all amounts in an array. The key tells the function which field to add.
+function sumBy(items, key) {
+  return items.reduce((total, item) => total + Number(item[key] || 0), 0);
+}
+
+// A renewal is upcoming when it falls within the next 30 days.
+function isUpcoming(dateString) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const renewalDate = new Date(`${dateString}T00:00:00`);
+  const daysAway = Math.ceil((renewalDate - today) / (1000 * 60 * 60 * 24));
+
+  return daysAway >= 0 && daysAway <= 30;
+}
+
+// Render every section from state. Calling this after changes keeps the UI in sync.
+function render() {
+  const totalBills = sumBy(state.bills, "amount");
+  const totalSpending = sumBy(state.transactions, "amount");
+  const remaining = Number(state.income || 0) - totalBills - totalSpending;
+  const upcomingRenewals = state.renewals.filter((renewal) => isUpcoming(renewal.date)).length;
+
+  elements.incomeInput.value = state.income || "";
+  elements.incomeAmount.textContent = formatMoney(state.income);
+  elements.billsAmount.textContent = formatMoney(totalBills);
+  elements.spendingAmount.textContent = formatMoney(totalSpending);
+  elements.remainingAmount.textContent = formatMoney(remaining);
+  elements.renewalCount.textContent = String(upcomingRenewals);
+  elements.billTotalLabel.textContent = `${formatMoney(totalBills)} total`;
+  elements.transactionTotalLabel.textContent = `${formatMoney(totalSpending)} total`;
+
+  renderBills();
+  renderTransactions();
+  renderCategoryTotals();
+  renderGoals();
+  renderRenewals();
+}
+
+function renderBills() {
+  if (state.bills.length === 0) {
+    elements.billList.innerHTML = `<p class="empty-state">No bills yet. Add your first regular payment.</p>`;
+    return;
+  }
+
+  elements.billList.innerHTML = state.bills.map((bill) => `
+    <div class="list-item">
+      <div class="item-main">
+        <div>
+          <p class="item-title">${escapeHtml(bill.name)}</p>
+          <p class="item-meta">${formatMoney(bill.amount)} due ${formatDate(bill.dueDate)}</p>
+        </div>
+        <div class="item-actions">
+          <button type="button" onclick="editBill('${bill.id}')">Edit</button>
+          <button class="danger-button" type="button" onclick="deleteBill('${bill.id}')">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderTransactions() {
+  if (state.transactions.length === 0) {
+    elements.transactionList.innerHTML = `<p class="empty-state">No transactions yet.</p>`;
+    return;
+  }
+
+  elements.transactionList.innerHTML = state.transactions.map((transaction) => `
+    <div class="list-item">
+      <div class="item-main">
+        <div>
+          <p class="item-title">${escapeHtml(transaction.name)}</p>
+          <p class="item-meta">${escapeHtml(transaction.category)}</p>
+        </div>
+        <strong>${formatMoney(transaction.amount)}</strong>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderCategoryTotals() {
+  elements.categoryTotals.innerHTML = CATEGORIES.map((category) => {
+    const total = state.transactions
+      .filter((transaction) => transaction.category === category)
+      .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
+
+    return `
+      <div class="category-pill">
+        ${category}
+        <strong>${formatMoney(total)}</strong>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderGoals() {
+  if (state.goals.length === 0) {
+    elements.goalList.innerHTML = `<p class="empty-state">No goals yet. Create a target to track progress.</p>`;
+    return;
+  }
+
+  elements.goalList.innerHTML = state.goals.map((goal) => {
+    const progress = Math.min((Number(goal.saved) / Number(goal.target)) * 100, 100);
+
+    return `
+      <div class="list-item">
+        <div class="item-main">
+          <div>
+            <p class="item-title">${escapeHtml(goal.name)}</p>
+            <p class="item-meta">${formatMoney(goal.saved)} of ${formatMoney(goal.target)}</p>
+          </div>
+          <strong>${Math.round(progress)}%</strong>
+        </div>
+        <div class="progress-track" aria-label="${escapeHtml(goal.name)} progress">
+          <div class="progress-fill" style="width: ${progress}%"></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderRenewals() {
+  if (state.renewals.length === 0) {
+    elements.renewalList.innerHTML = `<p class="empty-state">No reminders yet.</p>`;
+    return;
+  }
+
+  elements.renewalList.innerHTML = state.renewals.map((renewal) => `
+    <div class="list-item ${isUpcoming(renewal.date) ? "upcoming" : ""}">
+      <div class="item-main">
+        <div>
+          <p class="item-title">${escapeHtml(renewal.type)}</p>
+          <p class="item-meta">Renews ${formatDate(renewal.date)}</p>
+        </div>
+        <button class="danger-button" type="button" onclick="deleteRenewal('${renewal.id}')">Delete</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+elements.incomeForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  state.income = Number(elements.incomeInput.value);
+  saveState();
+  render();
+});
+
+elements.billForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const bill = {
+    id: elements.billId.value || createId(),
+    name: elements.billName.value.trim(),
+    amount: Number(elements.billAmount.value),
+    dueDate: elements.billDueDate.value
+  };
+
+  if (elements.billId.value) {
+    state.bills = state.bills.map((item) => item.id === bill.id ? bill : item);
+  } else {
+    state.bills.push(bill);
+  }
+
+  elements.billForm.reset();
+  elements.billId.value = "";
+  elements.billSubmitButton.textContent = "Add bill";
+  saveState();
+  render();
+});
+
+elements.transactionForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  state.transactions.unshift({
+    id: createId(),
+    name: elements.transactionName.value.trim(),
+    amount: Number(elements.transactionAmount.value),
+    category: elements.transactionCategory.value
+  });
+
+  elements.transactionForm.reset();
+  saveState();
+  render();
+});
+
+elements.goalForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  state.goals.push({
+    id: createId(),
+    name: elements.goalName.value.trim(),
+    target: Number(elements.goalTarget.value),
+    saved: Number(elements.goalSaved.value)
+  });
+
+  elements.goalForm.reset();
+  saveState();
+  render();
+});
+
+elements.renewalForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const type = elements.renewalType.value === "Custom reminder"
+    ? elements.customRenewalName.value.trim() || "Custom reminder"
+    : elements.renewalType.value;
+
+  state.renewals.push({
+    id: createId(),
+    type,
+    date: elements.renewalDate.value
+  });
+
+  elements.renewalForm.reset();
+  toggleCustomRenewalField();
+  saveState();
+  render();
+});
+
+elements.renewalType.addEventListener("change", toggleCustomRenewalField);
+
+elements.resetDemoButton.addEventListener("click", () => {
+  state = cloneData(demoData);
+  saveState();
+  render();
+});
+
+// Show the custom reminder input only when the custom type is selected.
+function toggleCustomRenewalField() {
+  const isCustom = elements.renewalType.value === "Custom reminder";
+  elements.customRenewalGroup.classList.toggle("hidden", !isCustom);
+  elements.customRenewalName.required = isCustom;
+}
+
+// These functions are global so the buttons created with innerHTML can call them.
+function editBill(id) {
+  const bill = state.bills.find((item) => item.id === id);
+
+  if (!bill) {
+    return;
+  }
+
+  elements.billId.value = bill.id;
+  elements.billName.value = bill.name;
+  elements.billAmount.value = bill.amount;
+  elements.billDueDate.value = bill.dueDate;
+  elements.billSubmitButton.textContent = "Save bill";
+  elements.billName.focus();
+}
+
+function deleteBill(id) {
+  state.bills = state.bills.filter((bill) => bill.id !== id);
+  saveState();
+  render();
+}
+
+function deleteRenewal(id) {
+  state.renewals = state.renewals.filter((renewal) => renewal.id !== id);
+  saveState();
+  render();
+}
+
+toggleCustomRenewalField();
+render();

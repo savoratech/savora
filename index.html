@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savora | Personal Finance and Life Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Personal finance</p>
+        <h1>Savora</h1>
+      </div>
+      <button class="icon-button" id="resetDemoButton" type="button" title="Reset demo data">Reset</button>
+    </header>
+
+    <section class="hero-panel">
+      <div>
+        <p class="muted">Money remaining this month</p>
+        <strong class="balance" id="remainingAmount">£0.00</strong>
+      </div>
+      <form class="income-form" id="incomeForm">
+        <label for="incomeInput">Monthly income</label>
+        <div class="inline-field">
+          <input id="incomeInput" name="income" type="number" min="0" step="0.01" placeholder="2500">
+          <button type="submit">Save</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="stats-grid" aria-label="Monthly summary">
+      <article class="stat-card">
+        <span>Income</span>
+        <strong id="incomeAmount">£0.00</strong>
+      </article>
+      <article class="stat-card">
+        <span>Bills</span>
+        <strong id="billsAmount">£0.00</strong>
+      </article>
+      <article class="stat-card">
+        <span>Spending</span>
+        <strong id="spendingAmount">£0.00</strong>
+      </article>
+      <article class="stat-card">
+        <span>Renewals due</span>
+        <strong id="renewalCount">0</strong>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Bills manager</p>
+            <h2>Bills</h2>
+          </div>
+          <span id="billTotalLabel">£0.00 total</span>
+        </div>
+        <form class="stacked-form" id="billForm">
+          <input type="hidden" id="billId">
+          <label>
+            Bill name
+            <input id="billName" type="text" placeholder="Rent" required>
+          </label>
+          <div class="two-column">
+            <label>
+              Amount
+              <input id="billAmount" type="number" min="0" step="0.01" placeholder="950" required>
+            </label>
+            <label>
+              Due date
+              <input id="billDueDate" type="date" required>
+            </label>
+          </div>
+          <button class="primary-button" type="submit" id="billSubmitButton">Add bill</button>
+        </form>
+        <div class="list" id="billList"></div>
+      </article>
+
+      <article class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Spending tracker</p>
+            <h2>Transactions</h2>
+          </div>
+          <span id="transactionTotalLabel">£0.00 total</span>
+        </div>
+        <form class="stacked-form" id="transactionForm">
+          <label>
+            Transaction name
+            <input id="transactionName" type="text" placeholder="Lunch" required>
+          </label>
+          <div class="two-column">
+            <label>
+              Amount
+              <input id="transactionAmount" type="number" min="0" step="0.01" placeholder="12.50" required>
+            </label>
+            <label>
+              Category
+              <select id="transactionCategory" required>
+                <option>Food</option>
+                <option>Transport</option>
+                <option>Shopping</option>
+                <option>Entertainment</option>
+                <option>Travel</option>
+                <option>Other</option>
+              </select>
+            </label>
+          </div>
+          <button class="primary-button" type="submit">Add transaction</button>
+        </form>
+        <div class="category-grid" id="categoryTotals"></div>
+        <div class="list" id="transactionList"></div>
+      </article>
+
+      <article class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Savings goals</p>
+            <h2>Goals</h2>
+          </div>
+        </div>
+        <form class="stacked-form" id="goalForm">
+          <label>
+            Goal name
+            <input id="goalName" type="text" placeholder="Emergency fund" required>
+          </label>
+          <div class="two-column">
+            <label>
+              Target
+              <input id="goalTarget" type="number" min="1" step="0.01" placeholder="3000" required>
+            </label>
+            <label>
+              Saved so far
+              <input id="goalSaved" type="number" min="0" step="0.01" placeholder="450" required>
+            </label>
+          </div>
+          <button class="primary-button" type="submit">Create goal</button>
+        </form>
+        <div class="list" id="goalList"></div>
+      </article>
+
+      <article class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Renewal reminders</p>
+            <h2>Life admin</h2>
+          </div>
+          <span>30 day alert</span>
+        </div>
+        <form class="stacked-form" id="renewalForm">
+          <label>
+            Renewal type
+            <select id="renewalType" required>
+              <option>Car insurance</option>
+              <option>MOT</option>
+              <option>Vehicle tax</option>
+              <option>Phone contract</option>
+              <option>Broadband</option>
+              <option>Custom reminder</option>
+            </select>
+          </label>
+          <label class="hidden" id="customRenewalGroup">
+            Custom reminder name
+            <input id="customRenewalName" type="text" placeholder="Passport renewal">
+          </label>
+          <label>
+            Renewal date
+            <input id="renewalDate" type="date" required>
+          </label>
+          <button class="primary-button" type="submit">Add reminder</button>
+        </form>
+        <div class="list" id="renewalList"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
