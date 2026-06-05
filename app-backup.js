@@ -273,41 +273,27 @@ elements.incomeForm.addEventListener("submit", (event) => {
   render();
 });
 
-elements.billForm.addEventListener("submit", async (event) => {
+elements.billForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
-
-  if (!user) {
-    alert("Please log in first.");
-    return;
-  }
-
   const bill = {
+    id: elements.billId.value || createId(),
     name: elements.billName.value.trim(),
     amount: Number(elements.billAmount.value),
-    due_date: elements.billDueDate.value,
-    user_id: user.id
+    dueDate: elements.billDueDate.value
   };
 
   if (elements.billId.value) {
-    await supabaseClient
-      .from("bills")
-      .update(bill)
-      .eq("id", elements.billId.value);
+    state.bills = state.bills.map((item) => item.id === bill.id ? bill : item);
   } else {
-    await supabaseClient
-      .from("bills")
-      .insert(bill);
+    state.bills.push(bill);
   }
 
   elements.billForm.reset();
   elements.billId.value = "";
   elements.billSubmitButton.textContent = "Add bill";
-
-  await loadUserData();
+  saveState();
+  render();
 });
 
 elements.transactionForm.addEventListener("submit", (event) => {
@@ -390,13 +376,10 @@ function editBill(id) {
   elements.billName.focus();
 }
 
-async function deleteBill(id) {
-  await supabaseClient
-    .from("bills")
-    .delete()
-    .eq("id", id);
-
-  await loadUserData();
+function deleteBill(id) {
+  state.bills = state.bills.filter((bill) => bill.id !== id);
+  saveState();
+  render();
 }
 
 function deleteRenewal(id) {
@@ -444,21 +427,6 @@ logoutBtn?.addEventListener("click", async () => {
   authMessage.textContent = "Logged out.";
   checkUser();
 });
-async function loadUserData() {
-  const { data: bills } = await supabaseClient
-    .from("bills")
-    .select("*")
-    .order("due_date", { ascending: true });
-
-  state.bills = (bills || []).map((bill) => ({
-    id: bill.id,
-    name: bill.name,
-    amount: bill.amount,
-    dueDate: bill.due_date
-  }));
-
-  render();
-}
 async function checkUser() {
   const { data } = await supabaseClient.auth.getUser();
   const user = data.user;
@@ -472,8 +440,6 @@ async function checkUser() {
     appShell.style.display = "block";
     appShell.style.width = "100%";
     appShell.style.margin = "0 auto";
-
-    await loadUserData();
   } else {
     loginPage.style.display = "flex";
     appShell.style.display = "none";
