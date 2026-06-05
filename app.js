@@ -272,10 +272,29 @@ function renderRenewals() {
   `).join("");
 }
 
-elements.incomeForm.addEventListener("submit", (event) => {
+elements.incomeForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  state.income = Number(elements.incomeInput.value);
-  saveState();
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please log in first.");
+    return;
+  }
+
+  const income = Number(elements.incomeInput.value);
+
+  await supabaseClient
+    .from("user_settings")
+    .upsert({
+      user_id: user.id,
+      income: income,
+      updated_at: new Date().toISOString()
+    });
+
+  state.income = income;
   render();
 });
 
@@ -462,7 +481,12 @@ async function loadUserData() {
     amount: bill.amount,
     dueDate: bill.due_date
   }));
+const { data: settings } = await supabaseClient
+  .from("user_settings")
+  .select("income")
+  .single();
 
+state.income = settings?.income || 0;
   render();
 }
 async function checkUser() {
