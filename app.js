@@ -10,22 +10,11 @@ const CATEGORIES = ["Food", "Transport", "Shopping", "Entertainment", "Travel", 
 
 // Starter data makes the app useful on first open. Users can reset back to this sample data.
 const demoData = {
-  income: 2650,
-  bills: [
-    { id: createId(), name: "Rent", amount: 950, dueDate: "2026-06-01" },
-    { id: createId(), name: "Energy", amount: 128, dueDate: "2026-06-15" }
-  ],
-  transactions: [
-    { id: createId(), name: "Groceries", amount: 74.2, category: "Food" },
-    { id: createId(), name: "Train ticket", amount: 22.8, category: "Transport" }
-  ],
-  goals: [
-    { id: createId(), name: "Holiday fund", target: 1200, saved: 420 }
-  ],
-  renewals: [
-    { id: createId(), type: "Car insurance", date: "2026-06-22" },
-    { id: createId(), type: "Broadband", date: "2026-08-12" }
-  ]
+  income: 0,
+  bills: [],
+  transactions: [],
+  goals: [],
+  renewals: [],
 };
 
 // The app state is kept in memory while the page is open, then saved after every change.
