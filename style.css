@@ -1207,3 +1207,9 @@ button:hover {
 #loginBtn {
   background: linear-gradient(135deg, var(--accent), #8d6bff);
 }
+.login-logo {
+  width: 120px;
+  height: auto;
+  display: block;
+  margin: 0 auto 20px;
+}
