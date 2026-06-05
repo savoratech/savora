@@ -1,3 +1,7 @@
+const SUPABASE_URL = "https://lcqqfgyscpktrmpxsdpq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_v9OzNjA6-xwG1BLTrjhUiA_vedhNR3S";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Savora stores all user data in this single localStorage key.
 const STORAGE_KEY = "savora-data";
 
@@ -343,7 +347,7 @@ elements.renewalForm.addEventListener("submit", (event) => {
 
 elements.renewalType.addEventListener("change", toggleCustomRenewalField);
 
-elements.resetDemoButton.addEventListener("click", () => {
+elements.resetDemoButton?.addEventListener("click", () => {
   state = cloneData(demoData);
   saveState();
   render();
@@ -386,3 +390,68 @@ function deleteRenewal(id) {
 
 toggleCustomRenewalField();
 render();
+const authEmail = document.getElementById("authEmail");
+const authPassword = document.getElementById("authPassword");
+const signupBtn = document.getElementById("signupBtn");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const authMessage = document.getElementById("authMessage");
+
+signupBtn?.addEventListener("click", async () => {
+  const { error } = await supabaseClient.auth.signUp({
+    email: authEmail.value,
+    password: authPassword.value
+  });
+
+  authMessage.textContent = error
+    ? error.message
+    : "Account created successfully.";
+});
+
+loginBtn?.addEventListener("click", async () => {
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email: authEmail.value,
+    password: authPassword.value
+  });
+
+  if (error) {
+  authMessage.textContent = error.message;
+} else {
+  authMessage.textContent = "Logged in successfully.";
+  checkUser();
+}
+});
+
+logoutBtn?.addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  authMessage.textContent = "Logged out.";
+  checkUser();
+});
+async function checkUser() {
+  const { data } = await supabaseClient.auth.getUser();
+  const user = data.user;
+
+  const loginPage = document.getElementById("loginPage");
+  const appShell = document.getElementById("appShell");
+
+  if (user) {
+    loginPage.style.display = "none";
+
+    appShell.style.display = "block";
+    appShell.style.width = "100%";
+    appShell.style.margin = "0 auto";
+  } else {
+    loginPage.style.display = "flex";
+    appShell.style.display = "none";
+  }
+}
+
+
+const dashboardLogoutBtn = document.getElementById("dashboardLogoutBtn");
+
+dashboardLogoutBtn?.addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  checkUser();
+});
+
+checkUser();

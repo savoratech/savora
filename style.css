@@ -351,4 +351,56 @@ button:hover {
   .two-column {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  .login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: 20px;
+  background: rgba(20, 24, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+}
+
+.auth-box h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-box input {
+  margin-bottom: 12px;
+}
+
+.auth-box button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+#signupBtn {
+  background: rgba(255,255,255,0.08);
+}
+
+#loginBtn {
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    #8d6bff
+  );
+}
+}
 }

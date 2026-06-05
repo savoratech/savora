@@ -7,16 +7,30 @@
   <title>Savora | Personal Finance and Life Admin</title>
   <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0f172a">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app-shell">
-    <header class="topbar">
-      <div>
+  <div id="loginPage" class="login-page">
+  <section id="authBox" class="auth-box">
+    <h2>Login to Savora</h2>
+
+    <input id="authEmail" type="email" placeholder="Email">
+    <input id="authPassword" type="password" placeholder="Password">
+
+    <button id="signupBtn">Create account</button>
+    <button id="loginBtn">Log in</button>
+
+    <p id="authMessage"></p>
+  </section>
+</div>
+<main class="app-shell" id="appShell" style="display:none;">
+  <header class="topbar">
+    <div>
         <p class="eyebrow">Personal finance</p>
         <h1>Savora</h1>
       </div>
-      <button class="icon-button" id="resetDemoButton" type="button" title="Reset demo data">Reset</button>
+    <button id="dashboardLogoutBtn" class="icon-button" type="button">Log out</button>
     </header>
 
     <section class="hero-panel">
@@ -181,10 +195,5 @@
   </main>
 
   <script src="app.js"></script>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js");
-  }
-</script>
 </body>
 </html>
