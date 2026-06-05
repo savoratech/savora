@@ -1208,8 +1208,17 @@ button:hover {
   background: linear-gradient(135deg, var(--accent), #8d6bff);
 }
 .login-logo {
-  width: 120px;
+  width: 140px;
   height: auto;
   display: block;
   margin: 0 auto 20px;
+}
+
+.auth-box {
+
+  text-align: center;
+}
+.app-logo img {
+  width: 120px;
+  height: auto;
 }
