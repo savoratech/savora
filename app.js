@@ -166,6 +166,20 @@ function renderBills() {
       </div>
     </div>
   `).join("");
+  document.querySelectorAll(".delete-transaction").forEach(button => {
+  button.addEventListener("click", () => {
+    const id = button.dataset.id;
+
+    if (!confirm("Delete this transaction?")) return;
+
+    state.transactions = state.transactions.filter(
+      transaction => transaction.id !== id
+    );
+
+    saveState();
+    render();
+  });
+});
 }
 
 function renderTransactions() {
@@ -203,18 +217,6 @@ function renderTransactions() {
   </div>
 </div>
     </div>
-    document.querySelectorAll(".delete-transaction").forEach(button => {
-  button.addEventListener("click", () => {
-    const id = button.dataset.id;
-
-    if (!confirm("Delete this transaction?")) return;
-
-    state.transactions = state.transactions.filter(
-      transaction => transaction.id !== id
-    );
-
-    saveState();
-    render();
   });
 });
   `).join("");
