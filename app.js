@@ -181,7 +181,6 @@ function renderBills() {
   });
 });
 }
-
 function renderTransactions() {
   if (state.transactions.length === 0) {
     elements.transactionList.innerHTML = `<p class="empty-state">No transactions yet.</p>`;
@@ -190,36 +189,27 @@ function renderTransactions() {
 
   elements.transactionList.innerHTML = state.transactions.map((transaction) => `
     <div class="list-item">
-<div class="item-main">
-  <div>
-    <p class="item-title">${escapeHtml(transaction.name)}</p>
-    <p class="item-meta">${escapeHtml(transaction.category)}</p>
-  </div>
+      <div class="item-main">
+        <div>
+          <p class="item-title">${escapeHtml(transaction.name)}</p>
+          <p class="item-meta">${escapeHtml(transaction.category)}</p>
+        </div>
 
-  <div style="display:flex;align-items:center;gap:12px;">
-    <strong>${formatMoney(transaction.amount)}</strong>
-
-    <button
-      class="delete-transaction"
-      data-id="${transaction.id}"
-      style="
-        background:#ff4d6d;
-        border:none;
-        color:white;
-        width:32px;
-        height:32px;
-        border-radius:8px;
-        cursor:pointer;
-      "
-    >
-      🗑
-    </button>
-  </div>
-</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <strong>${formatMoney(transaction.amount)}</strong>
+          <button class="delete-transaction" data-id="${transaction.id}">🗑</button>
+        </div>
+      </div>
     </div>
-  });
-});
   `).join("");
+
+  document.querySelectorAll(".delete-transaction").forEach(button => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.id;
+      state.transactions = state.transactions.filter(transaction => transaction.id !== id);
+      render();
+    });
+  });
 }
 
 function renderCategoryTotals() {
