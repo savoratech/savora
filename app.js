@@ -100,19 +100,11 @@ function escapeHtml(value) {
 
 // Load saved data. If none exists yet, save and return demo data.
 function loadState() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-
-  if (!saved) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(demoData));
-    return cloneData(demoData);
-  }
-
-  return JSON.parse(saved);
+  return cloneData(demoData);
 }
 
-// Save the latest state so the app reloads with the same data next time.
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  // Supabase now handles saving data.
 }
 
 // Add all amounts in an array. The key tells the function which field to add.
