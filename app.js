@@ -286,13 +286,19 @@ elements.incomeForm.addEventListener("submit", async (event) => {
 
   const income = Number(elements.incomeInput.value);
 
-  await supabaseClient
-    .from("user_settings")
-    .upsert({
-      user_id: user.id,
-      income: income,
-      updated_at: new Date().toISOString()
-    });
+  const { error } = await supabaseClient
+  .from("user_settings")
+  .upsert({
+    user_id: user.id,
+    income: income,
+    updated_at: new Date().toISOString()
+  });
+
+if (error) {
+  alert(error.message);
+  console.log(error);
+  return;
+}
 
   state.income = income;
   render();
