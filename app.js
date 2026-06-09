@@ -393,15 +393,18 @@ elements.goalForm.addEventListener("submit", async (event) => {
     user_id: user.id
   };
 
-  const { error } = await supabaseClient
-    .from("savings_goals")
-    .insert(goal);
+  const { data, error } = await supabaseClient
+  .from("savings_goals")
+  .insert(goal)
+  .select();
 
-  if (error) {
-    alert(error.message);
-    console.error(error);
-    return;
-  }
+console.log("GOAL RESULT:", data);
+console.log("GOAL ERROR:", error);
+
+if (error) {
+  alert(error.message);
+  return;
+}
 
   elements.goalForm.reset();
 
