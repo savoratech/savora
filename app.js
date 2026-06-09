@@ -388,8 +388,8 @@ elements.goalForm.addEventListener("submit", async (event) => {
 
   const goal = {
     name: elements.goalName.value.trim(),
-    target: Number(elements.goalTarget.value),
-    saved: Number(elements.goalSaved.value),
+    target_amount: Number(elements.goalTarget.value),
+    current_amount: Number(elements.goalSaved.value),
     user_id: user.id
   };
 
@@ -536,8 +536,8 @@ const { data: goals } = await supabaseClient
 state.goals = (goals || []).map((goal) => ({
   id: goal.id,
   name: goal.name,
-  target: goal.target,
-  saved: goal.saved
+  target: goal.target_amount,
+  saved: goal.current_amount
 }));
   state.transactions = (transactions || []).map((transaction) => ({
     id: transaction.id,
