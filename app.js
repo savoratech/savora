@@ -374,19 +374,38 @@ elements.transactionForm.addEventListener("submit", async (event) => {
 
   await loadUserData();
 });
-elements.goalForm.addEventListener("submit", (event) => {
+elements.goalForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  state.goals.push({
-    id: createId(),
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please log in first.");
+    return;
+  }
+
+  const goal = {
     name: elements.goalName.value.trim(),
     target: Number(elements.goalTarget.value),
-    saved: Number(elements.goalSaved.value)
-  });
+    saved: Number(elements.goalSaved.value),
+    user_id: user.id
+  };
+
+  const { error } = await supabaseClient
+    .from("savings_goals")
+    .insert(goal);
+
+  if (error) {
+    alert(error.message);
+    console.error(error);
+    return;
+  }
 
   elements.goalForm.reset();
-  saveState();
-  render();
+
+  await loadUserData();
 });
 
 elements.renewalForm.addEventListener("submit", (event) => {
@@ -510,7 +529,16 @@ async function loadUserData() {
     amount: bill.amount,
     dueDate: bill.due_date
   }));
+const { data: goals } = await supabaseClient
+  .from("savings_goals")
+  .select("*");
 
+state.goals = (goals || []).map((goal) => ({
+  id: goal.id,
+  name: goal.name,
+  target: goal.target,
+  saved: goal.saved
+}));
   state.transactions = (transactions || []).map((transaction) => ({
     id: transaction.id,
     name: transaction.name,
