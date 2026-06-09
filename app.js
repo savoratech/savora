@@ -166,20 +166,7 @@ function renderBills() {
       </div>
     </div>
   `).join("");
-  document.querySelectorAll(".delete-transaction").forEach(button => {
-  button.addEventListener("click", () => {
-    const id = button.dataset.id;
-
-    if (!confirm("Delete this transaction?")) return;
-
-    state.transactions = state.transactions.filter(
-      transaction => transaction.id !== id
-    );
-
-    saveState();
-    render();
-  });
-});
+  
 }
 function renderTransactions() {
   if (state.transactions.length === 0) {
@@ -204,10 +191,14 @@ function renderTransactions() {
   `).join("");
 
   document.querySelectorAll(".delete-transaction").forEach(button => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const id = button.dataset.id;
-      state.transactions = state.transactions.filter(transaction => transaction.id !== id);
-      render();
+      await supabaseClient
+  .from("transactions")
+  .delete()
+  .eq("id", id);
+
+await loadUserData();
     });
   });
 }
@@ -245,8 +236,14 @@ function renderGoals() {
           </div>
           <strong>${Math.round(progress)}%</strong>
         </div>
+
         <div class="progress-track" aria-label="${escapeHtml(goal.name)} progress">
           <div class="progress-fill" style="width: ${progress}%"></div>
+        </div>
+
+        <div class="item-actions">
+          <button type="button" onclick="addToGoal('${goal.id}')">Add money</button>
+          <button class="danger-button" type="button" onclick="deleteGoal('${goal.id}')">Delete</button>
         </div>
       </div>
     `;
@@ -469,7 +466,47 @@ async function deleteBill(id) {
 
   await loadUserData();
 }
+async function addToGoal(id) {
+  const goal = state.goals.find((item) => item.id === id);
 
+  if (!goal) return;
+
+  const amount = Number(prompt("How much do you want to add?"));
+
+  if (!amount || amount <= 0) return;
+
+  const newSavedAmount = Number(goal.saved) + amount;
+
+  const { error } = await supabaseClient
+    .from("savings_goals")
+    .update({ current_amount: newSavedAmount })
+    .eq("id", id);
+
+  if (error) {
+    alert(error.message);
+    console.error(error);
+    return;
+  }
+
+  await loadUserData();
+}
+
+async function deleteGoal(id) {
+  if (!confirm("Delete this goal?")) return;
+
+  const { error } = await supabaseClient
+    .from("savings_goals")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert(error.message);
+    console.error(error);
+    return;
+  }
+
+  await loadUserData();
+}
 function deleteRenewal(id) {
   state.renewals = state.renewals.filter((renewal) => renewal.id !== id);
   saveState();
