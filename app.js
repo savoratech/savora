@@ -341,21 +341,39 @@ elements.billForm.addEventListener("submit", async (event) => {
   await loadUserData();
 });
 
-elements.transactionForm.addEventListener("submit", (event) => {
+elements.transactionForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  state.transactions.unshift({
-    id: createId(),
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please log in first.");
+    return;
+  }
+
+  const transaction = {
     name: elements.transactionName.value.trim(),
     amount: Number(elements.transactionAmount.value),
-    category: elements.transactionCategory.value
-  });
+    category: elements.transactionCategory.value,
+    user_id: user.id
+  };
+
+  const { error } = await supabaseClient
+    .from("transactions")
+    .insert(transaction);
+
+  if (error) {
+    alert(error.message);
+    console.error(error);
+    return;
+  }
 
   elements.transactionForm.reset();
-  saveState();
-  render();
-});
 
+  await loadUserData();
+});
 elements.goalForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -481,18 +499,32 @@ async function loadUserData() {
     .select("*")
     .order("due_date", { ascending: true });
 
+  const { data: transactions } = await supabaseClient
+    .from("transactions")
+    .select("*")
+    .order("created_at", { ascending: false });
+
   state.bills = (bills || []).map((bill) => ({
     id: bill.id,
     name: bill.name,
     amount: bill.amount,
     dueDate: bill.due_date
   }));
-const { data: settings } = await supabaseClient
-  .from("user_settings")
-  .select("income")
-  .single();
 
-state.income = settings?.income || 0;
+  state.transactions = (transactions || []).map((transaction) => ({
+    id: transaction.id,
+    name: transaction.name,
+    amount: transaction.amount,
+    category: transaction.category
+  }));
+
+  const { data: settings } = await supabaseClient
+    .from("user_settings")
+    .select("income")
+    .maybeSingle();
+
+  state.income = settings?.income || 0;
+
   render();
 }
 async function checkUser() {
