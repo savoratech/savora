@@ -54,7 +54,9 @@ const elements = {
   customRenewalName: document.querySelector("#customRenewalName"),
   renewalDate: document.querySelector("#renewalDate"),
   renewalList: document.querySelector("#renewalList"),
-  resetDemoButton: document.querySelector("#resetDemoButton")
+  resetDemoButton: document.querySelector("#resetDemoButton"),
+navButtons: document.querySelectorAll(".nav-btn"),
+appSections: document.querySelectorAll(".app-section")
 };
 
 // Convert a number into a currency string for the user's browser locale.
@@ -650,5 +652,23 @@ dashboardLogoutBtn?.addEventListener("click", async () => {
   await supabaseClient.auth.signOut();
   checkUser();
 });
+elements.navButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const targetSection = button.dataset.section;
 
+    elements.navButtons.forEach((navButton) => {
+      navButton.classList.remove("active");
+    });
+
+    elements.appSections.forEach((section) => {
+      section.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    document
+      .querySelector(`[data-section-panel="${targetSection}"]`)
+      ?.classList.add("active");
+  });
+});
 checkUser();

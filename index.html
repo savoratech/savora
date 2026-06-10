@@ -30,11 +30,20 @@
 <main class="app-shell" id="appShell" style="display:none;">
   <header class="topbar">
     <div class="app-logo">
-    <img src="logo.png" alt="Savora">
-</div>
+      <img src="logo.png" alt="Savora">
+    </div>
     <button id="dashboardLogoutBtn" class="icon-button" type="button">Log out</button>
-    </header>
+  </header>
 
+  <nav class="app-nav">
+    <button class="nav-btn active" data-section="overview">Overview</button>
+    <button class="nav-btn" data-section="bills">Bills</button>
+    <button class="nav-btn" data-section="transactions">Transactions</button>
+    <button class="nav-btn" data-section="goals">Goals</button>
+    <button class="nav-btn" data-section="renewals">Renewals</button>
+  </nav>
+
+  <div class="app-section active" data-section-panel="overview">
     <section class="hero-panel">
       <div>
         <p class="muted">Money remaining this month</p>
@@ -67,7 +76,9 @@
         <strong id="renewalCount">0</strong>
       </article>
     </section>
+  </div>
 
+  <div class="app-section" data-section-panel="bills">
     <section class="content-grid">
       <article class="panel">
         <div class="section-heading">
@@ -97,7 +108,11 @@
         </form>
         <div class="list" id="billList"></div>
       </article>
+    </section>
+  </div>
 
+  <div class="app-section" data-section-panel="transactions">
+    <section class="content-grid">
       <article class="panel">
         <div class="section-heading">
           <div>
@@ -133,7 +148,11 @@
         <div class="category-grid" id="categoryTotals"></div>
         <div class="list" id="transactionList"></div>
       </article>
+    </section>
+  </div>
 
+  <div class="app-section" data-section-panel="goals">
+    <section class="content-grid">
       <article class="panel">
         <div class="section-heading">
           <div>
@@ -160,7 +179,11 @@
         </form>
         <div class="list" id="goalList"></div>
       </article>
+    </section>
+  </div>
 
+  <div class="app-section" data-section-panel="renewals">
+    <section class="content-grid">
       <article class="panel">
         <div class="section-heading">
           <div>
@@ -194,8 +217,8 @@
         <div class="list" id="renewalList"></div>
       </article>
     </section>
-  </main>
-
+  </div>
+</main>
   <script src="app.js"></script>
 </body>
 </html>

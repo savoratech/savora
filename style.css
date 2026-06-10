@@ -1222,3 +1222,32 @@ button:hover {
   width: 120px;
   height: auto;
 }
+.app-section {
+  display: none;
+}
+
+.app-section.active {
+  display: block;
+}
+
+.app-nav {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0 24px;
+  overflow-x: auto;
+}
+
+.nav-btn {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, #ff4d9d, #7c5cff);
+  border-color: transparent;
+}
