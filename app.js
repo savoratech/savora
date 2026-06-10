@@ -158,8 +158,23 @@ function isUpcoming(dateString) {
 // Render every section from state. Calling this after changes keeps the UI in sync.
 function render() {
   const totalBills = sumBy(state.bills, "amount");
-  const totalSpending = sumBy(state.transactions, "amount");
-  const remaining = Number(state.income || 0) - totalBills - totalSpending;
+
+let payPeriodTransactions = state.transactions;
+
+if (state.payDay) {
+  const period = getCurrentPayPeriod(state.payDay);
+
+  payPeriodTransactions = state.transactions.filter((transaction) => {
+    if (!transaction.transaction_date) return false;
+
+    const transactionDate = new Date(`${transaction.transaction_date}T00:00:00`);
+
+    return transactionDate >= period.start && transactionDate <= period.end;
+  });
+}
+
+const totalSpending = sumBy(payPeriodTransactions, "amount");
+const remaining = Number(state.income || 0) - totalBills - totalSpending;
   const upcomingRenewals = state.renewals.filter((renewal) => isUpcoming(renewal.date)).length;
 
   elements.incomeInput.value = state.income || "";
