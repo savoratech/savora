@@ -174,7 +174,7 @@ function render() {
   const period = getCurrentPayPeriod(state.payDay);
 
   elements.payPeriodLabel.textContent =
-    `${period.start.toLocaleDateString("en-GB")} - ${period.end.toLocaleDateString("en-GB")}`;
+  `Current pay period: ${period.start.toLocaleDateString("en-GB")} - ${period.end.toLocaleDateString("en-GB")}`;
 }
 
   renderBills();
