@@ -11,20 +11,171 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="loginPage" class="login-page">
-  <section id="authBox" class="auth-box">
+ <div id="loginPage" class="login-page">
+  <section class="landing-hero">
+    <div class="landing-left">
+      <img src="logo.png" alt="Savora" class="landing-logo">
 
-    <img src="logo.png" alt="Savora Logo" class="login-logo">
+      <p class="landing-brand-line">Financial clarity</p>
 
-    <h2>Welcome to Savora</h2>
+      <h1>Take control of your money, bills and life admin in one place.</h1>
 
-    <input id="authEmail" type="email" placeholder="Email">
-    <input id="authPassword" type="password" placeholder="Password">
+      <p class="landing-intro">
+        Savora helps you budget, save and stay on top of what matters — all from a simple, secure dashboard built around your payday.
+      </p>
 
-    <button id="signupBtn">Create account</button>
-    <button id="loginBtn">Log in</button>
+      <div class="landing-feature-grid">
+        <div class="landing-feature">
+          <span>◔</span>
+          <strong>Track Spending</strong>
+          <p>See where your money goes each pay period.</p>
+        </div>
 
-    <p id="authMessage"></p>
+        <div class="landing-feature">
+          <span>▣</span>
+          <strong>Manage Bills</strong>
+          <p>Stay on top of bills and regular payments.</p>
+        </div>
+
+        <div class="landing-feature">
+          <span>◎</span>
+          <strong>Build Goals</strong>
+          <p>Set savings goals and track your progress.</p>
+        </div>
+
+        <div class="landing-feature">
+          <span>◴</span>
+          <strong>Renewal Reminders</strong>
+          <p>Get reminders before important renewals.</p>
+        </div>
+
+        <div class="landing-feature">
+          <span>▦</span>
+          <strong>All in One Place</strong>
+          <p>Your money, bills, goals and reminders together.</p>
+        </div>
+
+        <div class="landing-feature">
+          <span>⌂</span>
+          <strong>Secure & Private</strong>
+          <p>Your data is protected and linked to your account.</p>
+        </div>
+      </div>
+    </div>
+
+    <section id="authBox" class="auth-box landing-login-card">
+      <h2>Welcome back</h2>
+      <p class="auth-subtitle">Log in to your Savora account</p>
+
+      <label>Email address</label>
+      <input id="authEmail" type="email" placeholder="you@example.com">
+
+      <label>Password</label>
+      <input id="authPassword" type="password" placeholder="Enter your password">
+
+      <button id="loginBtn">Log In</button>
+
+      <div class="auth-divider">
+        <span>Don’t have an account?</span>
+      </div>
+
+      <button id="signupBtn" class="secondary-auth-button">Create Free Account</button>
+
+      <p class="auth-security">Bank-level security • Your data is safe with us</p>
+      <p id="authMessage"></p>
+    </section>
+  </section>
+
+  <section class="landing-preview">
+    <div class="preview-device">
+      <div class="preview-topbar">
+        <span>SAVORA</span>
+        <span>Overview</span>
+      </div>
+
+      <div class="preview-stat-row">
+        <div>
+          <span>Income</span>
+          <strong>£2,800.00</strong>
+        </div>
+        <div>
+          <span>Bills</span>
+          <strong>£1,050.00</strong>
+        </div>
+        <div>
+          <span>Spending</span>
+          <strong>£620.45</strong>
+        </div>
+        <div>
+          <span>Remaining</span>
+          <strong>£1,129.55</strong>
+        </div>
+      </div>
+
+      <div class="preview-card-row">
+        <div class="preview-card">
+          <span>Spending by Category</span>
+          <div class="preview-chart"></div>
+        </div>
+
+        <div class="preview-card">
+          <span>Upcoming Renewals</span>
+          <p>Netflix · 23 Jun 2026</p>
+          <p>Spotify · 28 Jun 2026</p>
+          <p>Gym Membership · 5 Jul 2026</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="landing-control-card">
+      <p class="landing-pill">Your Money. Organised.</p>
+      <h2>Everything you need to stay in control.</h2>
+      <p>
+        Savora brings together budgeting, savings goals, bills, renewals and spending history — so you can focus on living your life, not managing it.
+      </p>
+
+      <div class="control-list">
+        <div>
+          <strong>Save time</strong>
+          <span>See everything in one clean place.</span>
+        </div>
+        <div>
+          <strong>Reduce stress</strong>
+          <span>Never forget an important bill or renewal again.</span>
+        </div>
+        <div>
+          <strong>Reach your goals</strong>
+          <span>Build better habits and achieve the things that matter.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="real-life-strip">
+    <div>
+      <strong>Simple & Intuitive</strong>
+      <span>Easy to use every day.</span>
+    </div>
+    <div>
+      <strong>Secure by Design</strong>
+      <span>Your data is protected.</span>
+    </div>
+    <div>
+      <strong>Sync Across Devices</strong>
+      <span>Access your dashboard anywhere.</span>
+    </div>
+    <div>
+      <strong>Offline Friendly</strong>
+      <span>Built with mobile-first use in mind.</span>
+    </div>
+  </section>
+
+  <section class="landing-cta">
+    <div>
+      <h2>Ready to take control?</h2>
+      <p>Join Savora and start building better financial habits today.</p>
+    </div>
+    <button type="button" onclick="document.getElementById('authEmail').focus()">Create Free Account</button>
   </section>
 </div>
 <main class="app-shell" id="appShell" style="display:none;">
