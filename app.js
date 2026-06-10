@@ -40,7 +40,8 @@ const elements = {
   transactionName: document.querySelector("#transactionName"),
   transactionAmount: document.querySelector("#transactionAmount"),
   transactionCategory: document.querySelector("#transactionCategory"),
-  transactionTotalLabel: document.querySelector("#transactionTotalLabel"),
+transactionDate: document.querySelector("#transactionDate"),
+transactionTotalLabel: document.querySelector("#transactionTotalLabel"),
   transactionList: document.querySelector("#transactionList"),
   categoryTotals: document.querySelector("#categoryTotals"),
   goalForm: document.querySelector("#goalForm"),
@@ -182,6 +183,7 @@ function renderTransactions() {
         <div>
           <p class="item-title">${escapeHtml(transaction.name)}</p>
           <p class="item-meta">${escapeHtml(transaction.category)}</p>
+<p class="item-meta">${transaction.transaction_date || "No date"}</p>
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;">
@@ -353,11 +355,12 @@ elements.transactionForm.addEventListener("submit", async (event) => {
   }
 
   const transaction = {
-    name: elements.transactionName.value.trim(),
-    amount: Number(elements.transactionAmount.value),
-    category: elements.transactionCategory.value,
-    user_id: user.id
-  };
+  name: elements.transactionName.value.trim(),
+  amount: Number(elements.transactionAmount.value),
+  category: elements.transactionCategory.value,
+  transaction_date: elements.transactionDate.value,
+  user_id: user.id
+};
 
   const { error } = await supabaseClient
     .from("transactions")
