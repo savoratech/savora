@@ -25,6 +25,7 @@ const elements = {
   incomeInput: document.querySelector("#incomeInput"),
   incomeAmount: document.querySelector("#incomeAmount"),
   payDayInput: document.querySelector("#payDayInput"),
+  payPeriodLabel: document.querySelector("#payPeriodLabel"),
   billsAmount: document.querySelector("#billsAmount"),
   spendingAmount: document.querySelector("#spendingAmount"),
   remainingAmount: document.querySelector("#remainingAmount"),
@@ -67,6 +68,33 @@ function formatMoney(value) {
     style: "currency",
     currency: "GBP"
   }).format(value || 0);
+}
+
+function getCurrentPayPeriod(payDay) {
+  const today = new Date();
+
+  let start = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    payDay
+  );
+
+  if (today.getDate() < payDay) {
+    start = new Date(
+      today.getFullYear(),
+      today.getMonth() - 1,
+      payDay
+    );
+  }
+
+  const end = new Date(start);
+  end.setMonth(end.getMonth() + 1);
+  end.setDate(end.getDate() - 1);
+
+  return {
+    start,
+    end
+  };
 }
 
 // Create an ID for new records. crypto is preferred, with a fallback for older browsers.
@@ -142,6 +170,12 @@ function render() {
   elements.renewalCount.textContent = String(upcomingRenewals);
   elements.billTotalLabel.textContent = `${formatMoney(totalBills)} total`;
   elements.transactionTotalLabel.textContent = `${formatMoney(totalSpending)} total`;
+  if (state.payDay && elements.payPeriodLabel) {
+  const period = getCurrentPayPeriod(state.payDay);
+
+  elements.payPeriodLabel.textContent =
+    `${period.start.toLocaleDateString("en-GB")} - ${period.end.toLocaleDateString("en-GB")}`;
+}
 
   renderBills();
   renderTransactions();
