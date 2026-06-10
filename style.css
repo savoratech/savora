@@ -2225,3 +2225,88 @@ button:hover {
     margin-top: 0;
   }
 }
+/* iPhone / mobile landing page fix */
+
+@media (max-width: 700px) {
+  #loginPage.login-page {
+    display: block !important;
+    min-height: 100vh;
+    padding: 28px 18px 40px;
+    overflow-x: hidden;
+  }
+
+  .landing-hero {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 28px;
+    padding: 0;
+    margin: 0 auto;
+  }
+
+  .landing-left {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .landing-logo {
+    width: 170px;
+    margin: 0 auto 18px;
+  }
+
+  .landing-brand-line {
+    letter-spacing: 5px;
+    font-size: 11px;
+    margin: 10px 0 22px;
+  }
+
+  .landing-left h1 {
+    max-width: 100%;
+    font-size: 36px;
+    line-height: 1.08;
+    letter-spacing: -1.4px;
+    margin: 0 auto 18px;
+  }
+
+  .landing-intro {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 auto 24px;
+  }
+
+  .landing-feature-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+    margin-bottom: 0;
+  }
+
+  .landing-feature {
+    min-height: auto;
+    text-align: left;
+    padding: 14px;
+  }
+
+  #authBox.landing-login-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    transform: none !important;
+    padding: 26px 20px;
+    border-radius: 24px;
+  }
+
+  #authBox.landing-login-card h2 {
+    font-size: 26px;
+  }
+
+  #authBox.landing-login-card input {
+    height: 50px;
+    font-size: 16px;
+  }
+
+  #authBox.landing-login-card #loginBtn,
+  #authBox.landing-login-card #signupBtn.secondary-auth-button {
+    height: 52px;
+  }
+}
