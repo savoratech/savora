@@ -2090,3 +2090,69 @@ button:hover {
     width: 220px;
   }
 }
+/* Temporary landing cleanup - focus on hero/login only */
+
+.landing-preview,
+.real-life-strip,
+.landing-cta {
+  display: none !important;
+}
+
+#loginPage.login-page {
+  min-height: 100vh;
+  padding: 48px 32px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+.landing-hero {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 64px;
+  align-items: center;
+}
+
+#authBox.landing-login-card {
+  width: 100%;
+  max-width: 420px;
+  justify-self: end;
+}
+
+.landing-left {
+  max-width: 620px;
+}
+
+.landing-feature-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  #loginPage.login-page {
+    display: block !important;
+    padding: 28px 18px;
+  }
+
+  .landing-hero {
+    grid-template-columns: 1fr !important;
+    gap: 28px;
+  }
+
+  #authBox.landing-login-card {
+    justify-self: stretch;
+    max-width: 100%;
+  }
+
+  .landing-feature-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .landing-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
