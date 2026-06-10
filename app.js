@@ -408,7 +408,42 @@ if (error) {
   await loadUserData();
 });
 
-elements.renewalForm.addEventListener("submit", (event) => {
+elements.renewalForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Please log in first.");
+    return;
+  }
+
+  const type =
+    elements.renewalType.value === "Custom reminder"
+      ? elements.customRenewalName.value.trim() || "Custom reminder"
+      : elements.renewalType.value;
+
+  const { error } = await supabaseClient
+    .from("renewals")
+    .insert({
+      user_id: user.id,
+      type: type,
+      date: elements.renewalDate.value
+    });
+
+  if (error) {
+    alert(error.message);
+    console.error(error);
+    return;
+  }
+
+  elements.renewalForm.reset();
+  toggleCustomRenewalField();
+
+  await loadUserData();
+});
   event.preventDefault();
 
   const type = elements.renewalType.value === "Custom reminder"
@@ -425,7 +460,7 @@ elements.renewalForm.addEventListener("submit", (event) => {
   toggleCustomRenewalField();
   saveState();
   render();
-});
+
 
 elements.renewalType.addEventListener("change", toggleCustomRenewalField);
 
@@ -562,6 +597,10 @@ async function loadUserData() {
     .from("transactions")
     .select("*")
     .order("created_at", { ascending: false });
+const { data: renewals } = await supabaseClient
+  .from("renewals")
+  .select("*")
+  .order("date", { ascending: true });
 
   state.bills = (bills || []).map((bill) => ({
     id: bill.id,
@@ -585,7 +624,11 @@ state.goals = (goals || []).map((goal) => ({
     amount: transaction.amount,
     category: transaction.category
   }));
-
+state.renewals = (renewals || []).map((renewal) => ({
+  id: renewal.id,
+  type: renewal.type,
+  date: renewal.date
+}));
   const { data: settings } = await supabaseClient
     .from("user_settings")
     .select("income")
