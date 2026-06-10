@@ -2198,3 +2198,30 @@ button:hover {
 #authBox.landing-login-card {
   margin-top: 96px;
 }
+/* Landing balance tweak */
+
+#authBox.landing-login-card {
+  margin-top: 40px;
+  transform: scale(0.94);
+  transform-origin: top right;
+}
+
+.landing-feature-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 40px;
+}
+
+.landing-feature {
+  min-height: 118px;
+}
+
+.landing-left h1 {
+  max-width: 720px;
+}
+
+@media (max-width: 900px) {
+  #authBox.landing-login-card {
+    transform: none;
+    margin-top: 0;
+  }
+}
