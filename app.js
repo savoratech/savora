@@ -611,7 +611,8 @@ state.goals = (goals || []).map((goal) => ({
     id: transaction.id,
     name: transaction.name,
     amount: transaction.amount,
-    category: transaction.category
+    category: transaction.category,
+    transaction_date: transaction.transaction_date
   }));
 state.renewals = (renewals || []).map((renewal) => ({
   id: renewal.id,
