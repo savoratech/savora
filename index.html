@@ -192,6 +192,7 @@
     <button class="nav-btn" data-section="transactions">Transactions</button>
     <button class="nav-btn" data-section="goals">Goals</button>
     <button class="nav-btn" data-section="renewals">Renewals</button>
+    <button class="nav-btn" data-section="fuel">Fuel Forecast</button>
   </nav>
 
   <div class="app-section active" data-section-panel="overview">
@@ -360,6 +361,7 @@
           </div>
           <span>30 day alert</span>
         </div>
+        
         <form class="stacked-form" id="renewalForm">
           <label>
             Renewal type
@@ -386,6 +388,82 @@
       </article>
     </section>
   </div>
+  <div class="app-section" data-section-panel="fuel">
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Fuel forecast</p>
+        <h2>Live local fuel forecast</h2>
+        <span>Use your postcode, mileage and MPG to estimate fuel spend before payday.</span>
+      </div>
+    </div>
+
+    <form id="fuelForm" class="stacked-form">
+      <div class="two-column">
+        <label>
+          Postcode
+          <input id="fuelPostcode" type="text" placeholder="B79 7..." autocomplete="postal-code">
+        </label>
+
+        <label>
+          Fuel type
+          <select id="fuelType">
+            <option value="E10">Petrol E10</option>
+            <option value="E5">Premium petrol E5</option>
+            <option value="B7">Diesel B7</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="two-column">
+        <label>
+          Miles per week
+          <input id="milesPerWeek" type="number" min="0" step="1" placeholder="120">
+        </label>
+
+        <label>
+          Car MPG
+          <input id="carMpg" type="number" min="1" step="0.1" placeholder="42">
+        </label>
+      </div>
+
+      <button class="primary-button" type="submit">Find cheapest local fuel</button>
+    </form>
+
+    <div class="forecast-grid">
+      <div class="stat-card">
+        <span>Cheapest local price</span>
+        <strong id="localFuelPrice">Coming soon</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Weekly fuel cost</span>
+        <strong id="weeklyFuelCost">£0.00</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Fuel until payday</span>
+        <strong id="fuelUntilPayday">£0.00</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Remaining after fuel</span>
+        <strong id="remainingAfterFuel">£0.00</strong>
+      </div>
+    </div>
+
+    <div class="fuel-result-card" id="fuelResultCard">
+      <strong>API-ready feature</strong>
+      <p>
+        Next step: connect this to a Supabase Edge Function that fetches live Fuel Finder data.
+      </p>
+    </div>
+
+    <p class="forecast-note" id="fuelForecastNote">
+      Fuel prices will be live estimates and may vary at the pump.
+    </p>
+  </section>
+</div>
 </main>
   <script src="app.js"></script>
 </body>

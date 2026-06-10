@@ -764,4 +764,46 @@ select:focus {
   .app-shell {
     padding: 16px;
   }
+  /* Fuel forecast section */
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.fuel-result-card {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid rgba(85, 214, 190, 0.22);
+  border-radius: var(--radius);
+  background: rgba(85, 214, 190, 0.08);
+}
+
+.fuel-result-card strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.fuel-result-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.forecast-note {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Fuel forecast mobile layout */
+
+@media (max-width: 700px) {
+  .forecast-grid {
+    grid-template-columns: 1fr;
+  }
+}
 }
