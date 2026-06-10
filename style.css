@@ -2156,3 +2156,45 @@ button:hover {
     grid-template-columns: 1fr;
   }
 }
+/* Landing hero final polish */
+
+#loginPage.login-page {
+  align-items: flex-start;
+  padding-top: 28px;
+  padding-bottom: 56px;
+}
+
+.landing-hero {
+  align-items: start;
+  padding-top: 10px;
+}
+
+.landing-logo {
+  width: 230px;
+  margin-bottom: 8px;
+}
+
+.landing-brand-line {
+  margin-top: 8px;
+  margin-bottom: 26px;
+}
+
+.landing-left h1 {
+  font-size: clamp(36px, 4.2vw, 56px);
+}
+
+.landing-intro {
+  margin-bottom: 28px;
+}
+
+.landing-feature-grid {
+  gap: 14px;
+}
+
+.landing-feature {
+  min-height: 128px;
+}
+
+#authBox.landing-login-card {
+  margin-top: 96px;
+}
