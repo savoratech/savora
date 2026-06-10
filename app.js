@@ -444,23 +444,7 @@ elements.renewalForm.addEventListener("submit", async (event) => {
 
   await loadUserData();
 });
-  event.preventDefault();
-
-  const type = elements.renewalType.value === "Custom reminder"
-    ? elements.customRenewalName.value.trim() || "Custom reminder"
-    : elements.renewalType.value;
-
-  state.renewals.push({
-    id: createId(),
-    type,
-    date: elements.renewalDate.value
-  });
-
-  elements.renewalForm.reset();
-  toggleCustomRenewalField();
-  saveState();
-  render();
-
+  
 
 elements.renewalType.addEventListener("change", toggleCustomRenewalField);
 
