@@ -50,12 +50,19 @@
         <strong class="balance" id="remainingAmount">£0.00</strong>
       </div>
       <form class="income-form" id="incomeForm">
-        <label for="incomeInput">Monthly income</label>
-        <div class="inline-field">
-          <input id="incomeInput" name="income" type="number" min="0" step="0.01" placeholder="2500">
-          <button type="submit">Save</button>
-        </div>
-      </form>
+  <label for="incomeInput">Monthly income</label>
+
+  <div class="inline-field">
+    <input id="incomeInput" name="income" type="number" min="0" step="0.01" placeholder="2500">
+  </div>
+
+  <label for="payDayInput">Pay day of month</label>
+
+  <div class="inline-field">
+    <input id="payDayInput" type="number" min="1" max="31" placeholder="28">
+    <button type="submit">Save</button>
+  </div>
+</form>
     </section>
 
     <section class="stats-grid" aria-label="Monthly summary">

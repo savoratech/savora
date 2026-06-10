@@ -24,6 +24,7 @@ const elements = {
   incomeForm: document.querySelector("#incomeForm"),
   incomeInput: document.querySelector("#incomeInput"),
   incomeAmount: document.querySelector("#incomeAmount"),
+  payDayInput: document.querySelector("#payDayInput"),
   billsAmount: document.querySelector("#billsAmount"),
   spendingAmount: document.querySelector("#spendingAmount"),
   remainingAmount: document.querySelector("#remainingAmount"),
@@ -286,12 +287,14 @@ elements.incomeForm.addEventListener("submit", async (event) => {
   }
 
   const income = Number(elements.incomeInput.value);
+const payDay = Number(elements.payDayInput.value) || 1;
 
   const { error } = await supabaseClient
   .from("user_settings")
   .upsert({
     user_id: user.id,
     income: income,
+    pay_day: payDay,
     updated_at: new Date().toISOString()
   });
 
@@ -302,6 +305,7 @@ if (error) {
 }
 
   state.income = income;
+  state.payDay = payDay;
   render();
 });
 
@@ -621,10 +625,12 @@ state.renewals = (renewals || []).map((renewal) => ({
 }));
   const { data: settings } = await supabaseClient
     .from("user_settings")
-    .select("income")
+    .select("income, pay_day")
     .maybeSingle();
 
   state.income = settings?.income || 0;
+  state.payDay = settings?.pay_day || 1;
+  elements.payDayInput.value = state.payDay;
 
   render();
 }
