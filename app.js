@@ -19,6 +19,7 @@ const demoData = {
 
 // The app state is kept in memory while the page is open, then saved after every change.
 let state = loadState();
+let transactionView = "current";
 
 const elements = {
   incomeForm: document.querySelector("#incomeForm"),
@@ -44,6 +45,8 @@ const elements = {
   transactionCategory: document.querySelector("#transactionCategory"),
 transactionDate: document.querySelector("#transactionDate"),
 transactionTotalLabel: document.querySelector("#transactionTotalLabel"),
+currentPeriodFilter: document.querySelector("#currentPeriodFilter"),
+allTransactionsFilter: document.querySelector("#allTransactionsFilter"),
   transactionList: document.querySelector("#transactionList"),
   categoryTotals: document.querySelector("#categoryTotals"),
   goalForm: document.querySelector("#goalForm"),
@@ -96,7 +99,19 @@ function getCurrentPayPeriod(payDay) {
     end
   };
 }
+function getPayPeriodTransactions(transactions) {
+  if (!state.payDay) return transactions;
 
+  const period = getCurrentPayPeriod(state.payDay);
+
+  return transactions.filter((transaction) => {
+    if (!transaction.transaction_date) return false;
+
+    const transactionDate = new Date(`${transaction.transaction_date}T00:00:00`);
+
+    return transactionDate >= period.start && transactionDate <= period.end;
+  });
+}
 // Create an ID for new records. crypto is preferred, with a fallback for older browsers.
 function createId() {
   if (globalThis.crypto && typeof globalThis.crypto.randomUUID === "function") {
@@ -222,12 +237,17 @@ function renderBills() {
   
 }
 function renderTransactions() {
-  if (state.transactions.length === 0) {
+  const visibleTransactions =
+    transactionView === "current"
+      ? getPayPeriodTransactions(state.transactions)
+      : state.transactions;
+
+  if (visibleTransactions.length === 0) {
     elements.transactionList.innerHTML = `<p class="empty-state">No transactions yet.</p>`;
     return;
   }
 
-  elements.transactionList.innerHTML = state.transactions.map((transaction) => `
+  elements.transactionList.innerHTML = visibleTransactions.map((transaction) => `
     <div class="list-item">
       <div class="item-main">
         <div>
@@ -729,5 +749,22 @@ elements.navButtons.forEach((button) => {
       .querySelector(`[data-section-panel="${targetSection}"]`)
       ?.classList.add("active");
   });
+});
+elements.currentPeriodFilter?.addEventListener("click", () => {
+  transactionView = "current";
+
+  elements.currentPeriodFilter.classList.add("active");
+  elements.allTransactionsFilter.classList.remove("active");
+
+  renderTransactions();
+});
+
+elements.allTransactionsFilter?.addEventListener("click", () => {
+  transactionView = "all";
+
+  elements.allTransactionsFilter.classList.add("active");
+  elements.currentPeriodFilter.classList.remove("active");
+
+  renderTransactions();
 });
 checkUser();

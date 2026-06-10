@@ -96,6 +96,7 @@
           </div>
           <span id="billTotalLabel">£0.00 total</span>
         </div>
+        
         <form class="stacked-form" id="billForm">
           <input type="hidden" id="billId">
           <label>
@@ -129,6 +130,10 @@
           </div>
           <span id="transactionTotalLabel">£0.00 total</span>
         </div>
+<div class="transaction-filters">
+  <button type="button" class="filter-btn active" id="currentPeriodFilter">This pay period</button>
+  <button type="button" class="filter-btn" id="allTransactionsFilter">All history</button>
+</div>
         <form class="stacked-form" id="transactionForm">
           <label>
             Transaction name
