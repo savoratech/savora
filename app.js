@@ -278,8 +278,13 @@ await loadUserData();
 }
 
 function renderCategoryTotals() {
+  const visibleTransactions =
+    transactionView === "current"
+      ? getPayPeriodTransactions(state.transactions)
+      : state.transactions;
+
   elements.categoryTotals.innerHTML = CATEGORIES.map((category) => {
-    const total = state.transactions
+    const total = visibleTransactions
       .filter((transaction) => transaction.category === category)
       .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
 
@@ -757,6 +762,7 @@ elements.currentPeriodFilter?.addEventListener("click", () => {
   elements.allTransactionsFilter.classList.remove("active");
 
   renderTransactions();
+  renderCategoryTotals();
 });
 
 elements.allTransactionsFilter?.addEventListener("click", () => {
@@ -766,5 +772,6 @@ elements.allTransactionsFilter?.addEventListener("click", () => {
   elements.currentPeriodFilter.classList.remove("active");
 
   renderTransactions();
+  renderCategoryTotals();
 });
 checkUser();

@@ -1251,3 +1251,23 @@ button:hover {
   background: linear-gradient(135deg, #ff4d9d, #7c5cff);
   border-color: transparent;
 }
+.transaction-filters {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+
+.filter-btn {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #ff4d9d, #7c5cff);
+  border-color: transparent;
+}
