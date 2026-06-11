@@ -33,12 +33,11 @@ export async function onRequest(context) {
     "User-Agent": "Mozilla/5.0 Savora/1.0",
     "Accept": "application/json",
   },
-      },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-      }),
-    });
+  body: JSON.stringify({
+    client_id: clientId,
+    client_secret: clientSecret,
+  }),
+});
 
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
