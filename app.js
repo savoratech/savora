@@ -782,7 +782,17 @@ async function loadFuelPrices() {
   resultsEl.innerHTML = "<p>Loading fuel prices...</p>";
 
   try {
-    const response = await fetch("/fuel-prices");
+    const postcode = document.getElementById("fuelPostcode")?.value.trim();
+const fuelType = document.getElementById("fuelType")?.value || "E10";
+
+if (!postcode) {
+  resultsEl.innerHTML = "<p>Please enter your postcode first.</p>";
+  return;
+}
+
+const response = await fetch(
+  `/fuel-prices?postcode=${encodeURIComponent(postcode)}&fuelType=${encodeURIComponent(fuelType)}`
+);
     const data = await response.json();
 
     if (!data.success) {
@@ -793,23 +803,31 @@ async function loadFuelPrices() {
       .slice(0, 10)
       .map((station) => {
         return `
-          <div class="fuel-card">
-            <h3>${station.trading_name}</h3>
-            <p>${station.brand_name || ""}</p>
-            <p>${station.address || ""}, ${station.postcode || ""}</p>
-            <p><strong>E10 petrol:</strong> ${
-              station.e10_price ? station.e10_price + "p" : "N/A"
-            }</p>
-            <p><strong>Diesel:</strong> ${
-              station.diesel_price ? station.diesel_price + "p" : "N/A"
-            }</p>
-            <p class="muted">Updated: ${
-              station.last_updated
-                ? new Date(station.last_updated).toLocaleString("en-GB")
-                : "Unknown"
-            }</p>
-          </div>
-        `;
+  <div class="fuel-card">
+    <h3>${station.trading_name}</h3>
+    <p>${station.brand_name || ""}</p>
+    <p>${station.address || ""}, ${station.postcode || ""}</p>
+    <p><strong>Distance:</strong> ${station.distance_miles} miles</p>
+
+    <div class="fuel-price-row">
+      <span class="fuel-pill">E10: ${
+        station.e10_price ? station.e10_price + "p" : "N/A"
+      }</span>
+      <span class="fuel-pill">E5: ${
+        station.e5_price ? station.e5_price + "p" : "N/A"
+      }</span>
+      <span class="fuel-pill">Diesel: ${
+        station.diesel_price ? station.diesel_price + "p" : "N/A"
+      }</span>
+    </div>
+
+    <p class="muted">Updated: ${
+      station.last_updated
+        ? new Date(station.last_updated).toLocaleString("en-GB")
+        : "Unknown"
+    }</p>
+  </div>
+`;
       })
       .join("");
   } catch (error) {
