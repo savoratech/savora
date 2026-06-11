@@ -820,3 +820,115 @@ select:focus {
     grid-template-columns: 1fr !important;
   }
 }
+.fuel-api-box {
+  margin-top: 1.25rem;
+}
+
+#fuelResults {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.fuel-card {
+  padding: 1rem;
+  border-radius: 22px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.025)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.22);
+}
+
+.fuel-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.fuel-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.fuel-brand {
+  margin: 0.35rem 0 0;
+  color: var(--muted, #a8afbd);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.fuel-distance {
+  flex: 0 0 auto;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.fuel-address {
+  margin: 0.9rem 0;
+  color: var(--muted, #a8afbd);
+  line-height: 1.4;
+}
+
+.fuel-price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.fuel-price-tile {
+  padding: 0.75rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fuel-price-tile span {
+  display: block;
+  color: var(--muted, #a8afbd);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.fuel-price-tile strong {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.fuel-price-tile.active {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 74, 147, 0.18),
+    rgba(130, 93, 255, 0.16)
+  );
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.fuel-updated {
+  margin: 0.85rem 0 0;
+  color: var(--muted, #a8afbd);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 520px) {
+  .fuel-price-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fuel-card-top {
+    flex-direction: column;
+  }
+
+  .fuel-distance {
+    align-self: flex-start;
+  }
+}

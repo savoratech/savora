@@ -802,30 +802,47 @@ const response = await fetch(
     resultsEl.innerHTML = data.stations
       .slice(0, 10)
       .map((station) => {
-        return `
+       return `
   <div class="fuel-card">
-    <h3>${station.trading_name}</h3>
-    <p>${station.brand_name || ""}</p>
-    <p>${station.address || ""}, ${station.postcode || ""}</p>
-    <p><strong>Distance:</strong> ${station.distance_miles} miles</p>
+    <div class="fuel-card-top">
+      <div>
+        <h3>${station.trading_name}</h3>
+        <p class="fuel-brand">${station.brand_name || "Fuel station"}</p>
+      </div>
 
-    <div class="fuel-price-row">
-      <span class="fuel-pill">E10: ${
-        station.e10_price ? station.e10_price + "p" : "N/A"
-      }</span>
-      <span class="fuel-pill">E5: ${
-        station.e5_price ? station.e5_price + "p" : "N/A"
-      }</span>
-      <span class="fuel-pill">Diesel: ${
-        station.diesel_price ? station.diesel_price + "p" : "N/A"
-      }</span>
+      <div class="fuel-distance">
+        ${station.distance_miles} mi
+      </div>
     </div>
 
-    <p class="muted">Updated: ${
-      station.last_updated
-        ? new Date(station.last_updated).toLocaleString("en-GB")
-        : "Unknown"
-    }</p>
+    <p class="fuel-address">
+      ${station.address || ""}${station.postcode ? `, ${station.postcode}` : ""}
+    </p>
+
+    <div class="fuel-price-grid">
+      <div class="fuel-price-tile ${station.e10_price ? "active" : ""}">
+        <span>E10</span>
+        <strong>${station.e10_price ? station.e10_price + "p" : "N/A"}</strong>
+      </div>
+
+      <div class="fuel-price-tile ${station.e5_price ? "active" : ""}">
+        <span>E5</span>
+        <strong>${station.e5_price ? station.e5_price + "p" : "N/A"}</strong>
+      </div>
+
+      <div class="fuel-price-tile ${station.diesel_price ? "active" : ""}">
+        <span>Diesel</span>
+        <strong>${station.diesel_price ? station.diesel_price + "p" : "N/A"}</strong>
+      </div>
+    </div>
+
+    <p class="fuel-updated">
+      Updated ${
+        station.last_updated
+          ? new Date(station.last_updated).toLocaleString("en-GB")
+          : "Unknown"
+      }
+    </p>
   </div>
 `;
       })
