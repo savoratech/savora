@@ -774,4 +774,47 @@ elements.allTransactionsFilter?.addEventListener("click", () => {
   renderTransactions();
   renderCategoryTotals();
 });
+async function loadFuelPrices() {
+  const resultsEl = document.getElementById("fuelResults");
+
+  if (!resultsEl) return;
+
+  resultsEl.innerHTML = "<p>Loading fuel prices...</p>";
+
+  try {
+    const response = await fetch("/fuel-prices");
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Could not load fuel prices");
+    }
+
+    resultsEl.innerHTML = data.stations
+      .slice(0, 10)
+      .map((station) => {
+        return `
+          <div class="fuel-card">
+            <h3>${station.trading_name}</h3>
+            <p>${station.brand_name || ""}</p>
+            <p>${station.address || ""}, ${station.postcode || ""}</p>
+            <p><strong>E10 petrol:</strong> ${
+              station.e10_price ? station.e10_price + "p" : "N/A"
+            }</p>
+            <p><strong>Diesel:</strong> ${
+              station.diesel_price ? station.diesel_price + "p" : "N/A"
+            }</p>
+            <p class="muted">Updated: ${
+              station.last_updated
+                ? new Date(station.last_updated).toLocaleString("en-GB")
+                : "Unknown"
+            }</p>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (error) {
+    resultsEl.innerHTML = `<p>Could not load fuel prices: ${error.message}</p>`;
+  }
+}
+window.loadFuelPrices = loadFuelPrices;
 checkUser();
