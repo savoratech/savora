@@ -1,3 +1,5 @@
+let cachedAccessToken = null;
+let cachedTokenExpiresAt = 0;
 export async function onRequest(context) {
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -61,42 +63,54 @@ export async function onRequest(context) {
     const userLat = postcodeData.result.latitude;
     const userLon = postcodeData.result.longitude;
 
-    // 2. Generate Fuel Finder access token
-    const tokenResponse = await fetch(tokenUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...apiHeaders,
-      },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-      }),
-    });
+    // 2. Generate or reuse Fuel Finder access token
+let accessToken = cachedAccessToken;
 
-    if (!tokenResponse.ok) {
-      const errorText = await tokenResponse.text();
-      throw new Error(`Token request failed: ${tokenResponse.status} ${errorText}`);
-    }
+if (!accessToken || Date.now() >= cachedTokenExpiresAt) {
+  const tokenResponse = await fetch(tokenUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...apiHeaders,
+    },
+    body: JSON.stringify({
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
+  });
 
-    const tokenData = await tokenResponse.json();
+  if (!tokenResponse.ok) {
+    const errorText = await tokenResponse.text();
+    throw new Error(`Token request failed: ${tokenResponse.status} ${errorText}`);
+  }
 
-    const accessToken =
-      tokenData.access_token ||
-      tokenData.data?.access_token ||
-      tokenData.data?.token ||
-      tokenData.token;
+  const tokenData = await tokenResponse.json();
 
-    if (!accessToken) {
-      throw new Error(
-        `No access token found. Token response shape: ${JSON.stringify({
-          keys: Object.keys(tokenData),
-          dataKeys: tokenData.data ? Object.keys(tokenData.data) : null,
-          success: tokenData.success,
-          message: tokenData.message,
-        })}`
-      );
-    }
+  accessToken =
+    tokenData.access_token ||
+    tokenData.data?.access_token ||
+    tokenData.data?.token ||
+    tokenData.token;
+
+  if (!accessToken) {
+    throw new Error(
+      `No access token found. Token response shape: ${JSON.stringify({
+        keys: Object.keys(tokenData),
+        dataKeys: tokenData.data ? Object.keys(tokenData.data) : null,
+        success: tokenData.success,
+        message: tokenData.message,
+      })}`
+    );
+  }
+
+  const expiresInSeconds =
+    tokenData.expires_in ||
+    tokenData.data?.expires_in ||
+    3600;
+
+  cachedAccessToken = accessToken;
+  cachedTokenExpiresAt = Date.now() + (expiresInSeconds - 300) * 1000;
+}
 
     // 3. Fetch multiple Fuel Finder batches
     // Start with 10 batches. Each batch can contain up to 500 forecourts.
