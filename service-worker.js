@@ -1,4 +1,4 @@
-const CACHE_NAME = "savora-v1";
+const CACHE_NAME = "savora-v2";
 
 const FILES_TO_CACHE = [
   "/",
