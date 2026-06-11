@@ -14,13 +14,13 @@ export async function onRequest(context) {
     const clientSecret = context.env.FUEL_CLIENT_SECRET;
 
     const tokenUrl =
-      "https://developer.fuel-finder.service.gov.uk/api/v1/oauth/generate_access_token";
+      "https://www.fuel-finder.service.gov.uk/api/v1/oauth/generate_access_token";
 
     const pricesUrl =
-      "https://developer.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1";
+      "https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1";
 
     const pfsUrl =
-      "https://developer.fuel-finder.service.gov.uk/api/v1/pfs?batch-number=1";
+      "https://www.fuel-finder.service.gov.uk/api/v1/pfs?batch-number=1";
 
     if (!clientId || !clientSecret) {
       throw new Error("Missing Cloudflare environment variables.");
