@@ -45,7 +45,23 @@ export async function onRequest(context) {
     }
 
     const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.access_token;
+
+const accessToken =
+  tokenData.access_token ||
+  tokenData.data?.access_token ||
+  tokenData.data?.token ||
+  tokenData.token;
+
+if (!accessToken) {
+  throw new Error(
+    `No access token found. Token response shape: ${JSON.stringify({
+      keys: Object.keys(tokenData),
+      dataKeys: tokenData.data ? Object.keys(tokenData.data) : null,
+      success: tokenData.success,
+      message: tokenData.message,
+    })}`
+  );
+}
 
     const pricesResponse = await fetch(pricesUrl, {
   headers: {
