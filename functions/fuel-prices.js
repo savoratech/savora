@@ -27,9 +27,12 @@ export async function onRequest(context) {
     }
 
     const tokenResponse = await fetch(tokenUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "User-Agent": "Mozilla/5.0 Savora/1.0",
+    "Accept": "application/json",
+  },
       },
       body: JSON.stringify({
         client_id: clientId,
@@ -46,10 +49,12 @@ export async function onRequest(context) {
     const accessToken = tokenData.access_token;
 
     const pricesResponse = await fetch(pricesUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    "User-Agent": "Mozilla/5.0 Savora/1.0",
+    "Accept": "application/json",
+  },
+});
 
     if (!pricesResponse.ok) {
       const errorText = await pricesResponse.text();
@@ -59,10 +64,12 @@ export async function onRequest(context) {
     const pricesData = await pricesResponse.json();
 
     const pfsResponse = await fetch(pfsUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    "User-Agent": "Mozilla/5.0 Savora/1.0",
+    "Accept": "application/json",
+  },
+});
 
     if (!pfsResponse.ok) {
       const errorText = await pfsResponse.text();
