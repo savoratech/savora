@@ -816,5 +816,13 @@ async function loadFuelPrices() {
     resultsEl.innerHTML = `<p>Could not load fuel prices: ${error.message}</p>`;
   }
 }
-window.loadFuelPrices = loadFuelPrices;
+const loadFuelPricesBtn = document.getElementById("loadFuelPricesBtn");
+
+if (loadFuelPricesBtn) {
+  loadFuelPricesBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    loadFuelPrices();
+  });
+}
 checkUser();
