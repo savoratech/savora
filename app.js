@@ -795,13 +795,43 @@ const response = await fetch(
 );
     const data = await response.json();
 
-    if (!data.success) {
-      throw new Error(data.error || "Could not load fuel prices");
-    }
+if (!data.success) {
+  throw new Error(data.error || "Could not load fuel prices");
+}
 
+if (!data.stations || data.stations.length === 0) {
+  resultsEl.innerHTML = `
+    <div class="fuel-card">
+      <h3>No local fuel prices found</h3>
+      <p>Try a nearby postcode, or try again in a few minutes.</p>
+    </div>
+  `;
+  return;
+}
+
+const milesPerWeek =
+  Number(document.getElementById("milesPerWeek")?.value) || 0;
+
+const mpg =
+  Number(document.getElementById("carMpg")?.value) || 0;
+
+function calculateFuelCost(pricePerLitre) {
+  if (!pricePerLitre || !milesPerWeek || !mpg) return null;
+
+  const litresPerGallon = 4.54609;
+  const gallonsUsed = milesPerWeek / mpg;
+  const litresUsed = gallonsUsed * litresPerGallon;
+  const weeklyCost = litresUsed * (pricePerLitre / 100);
+
+  return {
+    weekly: weeklyCost,
+    monthly: weeklyCost * 4.345,
+  };
+}
     resultsEl.innerHTML = data.stations
       .slice(0, 10)
       .map((station) => {
+        const fuelCost = calculateFuelCost(station.selected_price);
        return `
   <div class="fuel-card">
     <div class="fuel-card-top">
@@ -836,6 +866,27 @@ const response = await fetch(
       </div>
     </div>
 
+    ${
+      fuelCost
+        ? `
+          <div class="fuel-cost-summary">
+            <div>
+              <span>Estimated weekly cost</span>
+              <strong>£${fuelCost.weekly.toFixed(2)}</strong>
+            </div>
+            <div>
+              <span>Estimated monthly cost</span>
+              <strong>£${fuelCost.monthly.toFixed(2)}</strong>
+            </div>
+          </div>
+        `
+        : `
+          <p class="fuel-updated">
+            Add miles per week and MPG to estimate your fuel cost.
+          </p>
+        `
+    }
+
     <p class="fuel-updated">
       Updated ${
         station.last_updated
@@ -850,6 +901,7 @@ const response = await fetch(
   } catch (error) {
     resultsEl.innerHTML = `<p>Could not load fuel prices: ${error.message}</p>`;
   }
+  
 }
 const loadFuelPricesBtn = document.getElementById("loadFuelPricesBtn");
 
